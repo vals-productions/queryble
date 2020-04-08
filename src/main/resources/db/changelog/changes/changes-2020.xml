@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd
+    http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+    
+    <!-- 
+    docker exec -it mysql bash -l
+    mysql -u root -p
+    
+    drop database queryble;
+    create database queryble CHARACTER SET utf8 COLLATE utf8_general_ci;
+
+    CREATE USER 'queryble'@'%' IDENTIFIED BY 'queryble123';
+    GRANT ALL ON queryble.* TO 'queryble'@'%';    
+    -->
+    
+    <changeSet author="vlad" id="2020-03-30-init-tbls-02" runAlways="true" runOnChange="true">
+    <sql>
+    	SET foreign_key_checks = 0;
+    	
+    	drop table if exists User;
+    	drop table if exists Address;
+    	drop table if exists Company;
+    	
+    	SET foreign_key_checks = 1;
+    	
+    	CREATE TABLE Company (
+    		uuid VARCHAR(36) PRIMARY KEY,
+  			name VARCHAR(50)
+    	);
+    	
+    	CREATE TABLE User (
+    		uuid VARCHAR(36) PRIMARY KEY,
+    		companyUuid VARCHAR(36),
+    		email VARCHAR(50) UNIQUE,
+    		firstName VARCHAR(50),
+    		lastName VARCHAR(50),
+  			
+  			FOREIGN KEY (companyUuid)
+      			REFERENCES Company(uuid)
+    	);
+    	
+    	CREATE TABLE Address (
+    		uuid VARCHAR(36) PRIMARY KEY,
+    		userUuid VARCHAR(36),
+  			line1 VARCHAR(50),
+  			line2 VARCHAR(50),
+  			
+  			FOREIGN KEY (userUuid)
+      			REFERENCES User(uuid)
+  			
+    	);
+    	
+    	insert into Company(uuid, name) VALUES ('7909ebd6-782c-11ea-be1b-0242ac110002', 'Solutions Inc');
+    	insert into Company(uuid, name) VALUES ('7981e6b7-782c-11ea-be1b-0242ac110002', 'Food Co');
+    	
+    	insert into User (uuid, email, firstName, lastName, companyUuid) VALUES 
+    		('9e6af924-21d4-4d46-b986-f542d4312153', 'jdoe@email.com', 'Joe', 'Doe', '7909ebd6-782c-11ea-be1b-0242ac110002');
+    	insert into User (uuid, email, firstName, lastName) VALUES 
+    		('8a5b9067-5680-492f-a946-152c7bd89795', 'johns@email.com', 'John', 'Smith');
+    	insert into User (uuid, email, firstName, lastName, companyUuid) VALUES 
+    		('15b0456b-15d1-44f3-8d91-5dd06b501a18', 'annl@email.com', 'Ann', 'Lake', '7981e6b7-782c-11ea-be1b-0242ac110002');
+    	insert into User (uuid, email, firstName, lastName) VALUES 
+    		('8d595f6a-34d1-4252-b941-2e7cb12b1974', 'patriciac@email.com', 'Patricia', 'Cloud');
+    	
+    	insert into Address(uuid, userUuid, line1, line2) 
+    	VALUES 
+    	('b40fcc93-b796-4965-b25e-4661ada5261c', '9e6af924-21d4-4d46-b986-f542d4312153', '13 Main str', 'San Jose, CA USA');
+
+    	insert into Address(uuid, userUuid, line1, line2) 
+    	VALUES 
+    	('a76b72f6-6697-4017-9fd6-9dae68db3a85', '15b0456b-15d1-44f3-8d91-5dd06b501a18', '2 South str', 'Mountain View, CA USA');
+    	
+    	insert into Address(uuid, userUuid, line1, line2) 
+    	VALUES 
+    	('49c25841-2e4d-46b6-9a60-2ce7c83c9c7f', '15b0456b-15d1-44f3-8d91-5dd06b501a18', '5 Ocean View ave', 'Pleasanton, CA USA');
+    	
+    	insert into Address(uuid, userUuid, line1, line2)
+    	VALUES 
+    	('60233fa8-81d2-417a-b327-f0e58242fc64', '8d595f6a-34d1-4252-b941-2e7cb12b1974', '45 Clear str', 'Concord, CA USA');
+    	
+    </sql>
+    </changeSet>
+    
+</databaseChangeLog>
