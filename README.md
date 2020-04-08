@@ -29,11 +29,11 @@ Then code below will:
 		q.gueryble()
 			.addFrom()
 			.add("User u")
-			.add("left join fetch u.addresses").withFlags("c")
+			.add("LEFT JOIN FETCH u.addresses").withFlags("c")
 			.addWhere()
-			.add("and u.email =", searchUser.getEmail())
-			.add("and u.firstName =", searchUser.getFirstName())
-			.add("and u.lastName =", searchUser.getLastName());
+			.add("AND u.email =", searchUser.getEmail())
+			.add("AND u.firstName =", searchUser.getFirstName())
+			.add("AND u.lastName =", searchUser.getLastName());
 			q.withQuerybleDescriptor(querybleDescriptor);
 			q.withEntityIdFor3StepPagination("u.uuid");
 		List<User> users = q.result();	
