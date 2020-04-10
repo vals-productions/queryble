@@ -8,9 +8,11 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import org.hibernate.Criteria;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.CriteriaSpecification;
 import org.hibernate.query.Query;
+import org.hibernate.transform.DistinctRootEntityResultTransformer;
 import org.hibernate.transform.RootEntityResultTransformer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -180,9 +182,28 @@ public class UserDaoImpl implements UserDao {
 			.add("and u.firstName =", searchUser.getFirstName())
 			.add("and u.lastName =", searchUser.getLastName());
 			q.withQuerybleDescriptor(querybleDescriptor);
+			q.withResultTransformer(DistinctRootEntityResultTransformer.INSTANCE);
 			q.withEntityIdFor3StepPagination("u.uuid");
 		List<User> users = q.result();	
 		return users;
 	}
 
+	@Override
+	public List<User> findWithQuerybleHqlPlaceholder(User searchUser, QuerybleDescriptor querybleDescriptor) throws Exception {
+		QuerybleHibernate<List<User>> q = QuerybleHibernate.create(hibernateSessionFactory.getCurrentSession());
+		q.gueryble()
+			.addFrom()
+			.add("User u")
+			.add("left join fetch u.addresses").withFlags("c")
+			.addWhere()
+			.add("and u.email =", searchUser.getEmail())
+			.add("and u.firstName =", searchUser.getFirstName())
+			.add("and u.lastName = {} AND u.status = 1", searchUser.getLastName());
+			q.withQuerybleDescriptor(querybleDescriptor);
+			q.withResultTransformer(DistinctRootEntityResultTransformer.INSTANCE);
+			q.withEntityIdFor3StepPagination("u.uuid");
+		List<User> users = q.result();
+		return users;
+	}
+	
 }

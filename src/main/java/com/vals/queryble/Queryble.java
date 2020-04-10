@@ -16,6 +16,7 @@ public class Queryble<P> {
 	
 	public static final String SELECT_COUNT = "SELECT COUNT(*) ";
 	public static final String paramPrevfix = "__param_";
+	public static final String PARAM_PLACEHOLDER = "{}";
 	
 	protected String customSelectClause;
 	protected LinkedList<QueryFragment<P>> queryFragments = new LinkedList<>();
@@ -130,12 +131,29 @@ public class Queryble<P> {
 		if (qf.param != null && qf.isParamFragment) {
 			if (!isUsePositionalParams) {
 				String name = getParamName();
-				sb.append(":" + name + " ");
+				applyParamPlaceholder(name, sb, qf);
 				parameterMap.put((P)name, qf.param);
 			} else {
 				Integer index = getParamIndex();
-				sb.append(" ? ");
+				applyParamPlaceholder(null, sb, qf);
 				parameterMap.put((P)index, qf.param);
+			}
+		}
+	}
+	
+	protected void applyParamPlaceholder(String name, StringBuilder sb, QueryFragment<P> qf) {
+		int position = sb.indexOf(PARAM_PLACEHOLDER);
+		if (position != -1) {
+			if (!isUsePositionalParams) {
+				sb.replace(position, position + 2, ":" + name);
+			} else {
+				sb.replace(position, position + 2, " ? ");
+			}
+		} else {
+			if (!isUsePositionalParams) {
+				sb.append(":" + name + " ");
+			} else {
+				sb.append(" ? ");
 			}
 		}
 	}

@@ -32,7 +32,8 @@ public class WebController {
 		testJdbc2(model);
 		testJdbc3(model);
 		
-		testQHql1(model);		
+		testQHql1(model);
+		testQHql2(model);
 		
 		return "view01";
 	}
@@ -52,6 +53,8 @@ public class WebController {
 		assertTrue("JDBC returned 1 user", users.size() == 1);
 		users = userDao.findUsersQuerybleJdbc(searchUser);
 		assertTrue("JDBC Queryble returned 1 user", users.size() == 1);
+		
+//		model.
 		
 		return "view01";
 	}
@@ -106,6 +109,28 @@ public class WebController {
 		
 		List<User> users = userDao.findWithQuerybleHql(searchUser, querybleDescriptor);
 		
+		assertTrue("JDBC Queryble returned 2 users", users.size() == 2);
+
+ 		return "view01";
+	}
+	
+	@RequestMapping(value = "/testQHql2", method = RequestMethod.GET)
+	public String testQHql2(Model model) throws Exception {
+		System.out.println("testQHql2");
+		QuerybleDescriptor querybleDescriptor = new QuerybleDescriptor();
+		querybleDescriptor.pageNumber = 1l;
+		querybleDescriptor.pageSize = 2l;
+		querybleDescriptor.sortMap = new HashMap<Integer, AbstractMap.SimpleEntry<String,String>>();
+		querybleDescriptor.sortMap.put(1, new AbstractMap.SimpleEntry<String,String>("u.lastName", "asc"));
+		querybleDescriptor.sortMap.put(2, new AbstractMap.SimpleEntry<String,String>("u.firstName", "asc"));
+		
+		User searchUser = new User();
+		searchUser.setLastName("Doe");
+		
+		List<User> users = userDao.findWithQuerybleHqlPlaceholder(searchUser, querybleDescriptor);
+		
+		assertTrue("JDBC Queryble returned 1 users", users.size() == 1);
+
  		return "view01";
 	}
 	

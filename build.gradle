@@ -19,6 +19,7 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-jdbc'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.liquibase:liquibase-core'
+	compile group: 'org.apache.tomcat.embed', name: 'tomcat-embed-jasper', version: '9.0.33'
 	runtimeOnly 'mysql:mysql-connector-java'
 	testImplementation('org.springframework.boot:spring-boot-starter-test') {
 		exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'

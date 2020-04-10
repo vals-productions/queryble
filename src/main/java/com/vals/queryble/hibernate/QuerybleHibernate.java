@@ -83,11 +83,12 @@ public class QuerybleHibernate<R> extends QuerybleExecutor<String> {
 			bindParameters(countQuery, querybleForCount);
 			List<Long> counts = countQuery.list();
 			Date dateAfter = new Date();
-			print("Execution time: " + (dateAfter.getTime() - dateBefore.getTime()) + " ms, query: " + countQueryString);		
+			Long count = null;
 			if (counts != null && counts.size() == 1) {
-				Long count = counts.get(0);
+				count = counts.get(0);
 				querybleDescriptor.totalCount = count;
 			}
+			print("Execution time: " + (dateAfter.getTime() - dateBefore.getTime()) + " ms, count :" + count + " query: " + countQueryString);		
 		}
 	}
 
@@ -118,7 +119,7 @@ public class QuerybleHibernate<R> extends QuerybleExecutor<String> {
 			bindParameters(idQuery, querybleForIds);
 			idList = idQuery.list();
 			Date dateAfter = new Date();
-			print("Execution time: " + (dateAfter.getTime() - dateBefore.getTime()) + " ms, query: " + queryString);		
+			print("Execution time: " + (dateAfter.getTime() - dateBefore.getTime()) + " ms, count: " + idList.size() +  ", query: " + queryString);		
 		}
 	}
 	
@@ -153,7 +154,9 @@ public class QuerybleHibernate<R> extends QuerybleExecutor<String> {
 		/*
 		 * Data retrieval
 		 */
-		queryble.setSort(querybleDescriptor.sortMap);
+		if (querybleDescriptor != null) {
+			queryble.setSort(querybleDescriptor.sortMap);
+		}
 		queryble.build();
 		String queryString = queryble.getQueryString();
 		query = session.createQuery(queryString);
@@ -173,12 +176,19 @@ public class QuerybleHibernate<R> extends QuerybleExecutor<String> {
 		}
 		R r = (R) query.list();
 		Date dateAfter = new Date();
-		print("Execution time: " + (dateAfter.getTime() - dateBefore.getTime()) + " ms, query: " + queryString);		
+		String countInsert = "";
+		Collection<?> collection = null;
+		if (r != null && r instanceof Collection<?>) {
+			collection = (Collection<?>)r;
+			countInsert = ", count: " + collection.size();
+		}
+		print("Execution time: " + (dateAfter.getTime() - dateBefore.getTime()) + " ms " + countInsert + ", query: " + queryString);		
 		return r;
 	}
 	
 	private void applyPagination(Query<?> query) {
-		query.setFirstResult((int)(querybleDescriptor.pageSize * querybleDescriptor.pageNumber));
+		int firstResult = (int)(querybleDescriptor.pageSize * (querybleDescriptor.pageNumber - 1));
+		query.setFirstResult(firstResult);
 		query.setMaxResults(querybleDescriptor.pageSize.intValue());		
 	}
 	

@@ -26,6 +26,7 @@ public class User {
 	private String firstName;
 	private String lastName;
 	private String email;
+	private Long status;
 	
 	@ManyToOne
 	@JoinColumn(name="companyUuid")
@@ -70,6 +71,12 @@ public class User {
 	}
 	public void setCompany(Company company) {
 		this.company = company;
+	}
+	public Long getStatus() {
+		return status;
+	}
+	public void setStatus(Long status) {
+		this.status = status;
 	}
 	
 

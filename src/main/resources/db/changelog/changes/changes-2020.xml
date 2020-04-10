@@ -38,6 +38,7 @@
     		email VARCHAR(50) UNIQUE,
     		firstName VARCHAR(50),
     		lastName VARCHAR(50),
+  			status INT DEFAULT 1,
   			
   			FOREIGN KEY (companyUuid)
       			REFERENCES Company(uuid)

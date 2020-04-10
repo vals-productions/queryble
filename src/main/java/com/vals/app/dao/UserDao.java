@@ -31,4 +31,6 @@ public interface UserDao {
 
 	List<User> findWithQuerybleHql(User searchUserObject, QuerybleDescriptor querybleDescriptor) throws Exception;
 
+	List<User> findWithQuerybleHqlPlaceholder(User searchUser, QuerybleDescriptor querybleDescriptor) throws Exception;
+
 }
