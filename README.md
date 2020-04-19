@@ -23,22 +23,26 @@ Then code below will:
 
 ```java
 
-	@Override
-	public List<User> findWithQuerybleHql(User searchUser, QuerybleDescriptor querybleDescriptor) throws Exception {
-		QuerybleHibernate<List<User>> q = QuerybleHibernate.create(hibernateSessionFactory.getCurrentSession());
-		q.gueryble()
-			.addFrom()
-			.add("User u")
-			.add("LEFT JOIN FETCH u.addresses").withFlags("c") // flag "c": hints the join not needed during record counting
-			.addWhere()
-			.add("AND u.email =", searchUser.getEmail())
-			.add("AND u.firstName =", searchUser.getFirstName())
-			.add("AND u.lastName =", searchUser.getLastName());
-			q.withQuerybleDescriptor(querybleDescriptor);
-			q.withEntityIdFor3StepPagination("u.uuid"); // this tells querybla which ID identified root query entity
-		List<User> users = q.result();	
-		return users;
-	}
+@Override
+public List<User> findWithQuerybleHql(User searchUser, QuerybleDescriptor querybleDescriptor) throws Exception {
+	QuerybleHibernate<List<User>> q = QuerybleHibernate.create(hibernateSessionFactory.getCurrentSession());
+	q.gueryble()
+	.addFrom()
+	.add("User u")
+	/* flag "c": hints the join not needed during record counting */
+	.add("LEFT JOIN FETCH u.addresses").withFlags("c") 
+	.addWhere()
+	.add("AND u.email =", searchUser.getEmail())
+	.add("AND u.firstName =", searchUser.getFirstName())
+	.add("AND u.lastName =", searchUser.getLastName());
+	q.withQuerybleDescriptor(querybleDescriptor);
+	/* tells queryble which ID identifies root query entity, also instructs to perform
+	* 2 step pagination (see doc below) to avoid HHH000104 situation.
+	*/
+	q.withEntityIdFor3StepPagination("u.uuid"); 
+	List<User> users = q.result();	
+	return users;
+}
 
 ```
 **Question:** How does it solve “HHH000104: firstResult/maxResults specified with collection fetch; applying in memory!” hibernate issue?
