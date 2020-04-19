@@ -29,13 +29,13 @@ Then code below will:
 		q.gueryble()
 			.addFrom()
 			.add("User u")
-			.add("LEFT JOIN FETCH u.addresses").withFlags("c")
+			.add("LEFT JOIN FETCH u.addresses").withFlags("c") // flag "c": hints the join not needed during record counting
 			.addWhere()
 			.add("AND u.email =", searchUser.getEmail())
 			.add("AND u.firstName =", searchUser.getFirstName())
 			.add("AND u.lastName =", searchUser.getLastName());
 			q.withQuerybleDescriptor(querybleDescriptor);
-			q.withEntityIdFor3StepPagination("u.uuid");
+			q.withEntityIdFor3StepPagination("u.uuid"); // this tells querybla which ID identified root query entity
 		List<User> users = q.result();	
 		return users;
 	}
