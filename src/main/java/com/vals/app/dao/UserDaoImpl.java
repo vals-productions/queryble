@@ -198,7 +198,7 @@ public class UserDaoImpl implements UserDao {
 			.addWhere()
 			.add("and u.email =", searchUser.getEmail())
 			.add("and u.firstName =", searchUser.getFirstName())
-			.add("and u.lastName = {} AND u.status = 1", searchUser.getLastName());
+			.add("and u.lastName like {} AND u.status = 1", searchUser.getLastName()).withFormat("%s%%");
 			q.withQuerybleDescriptor(querybleDescriptor);
 			q.withResultTransformer(DistinctRootEntityResultTransformer.INSTANCE);
 			q.withEntityIdFor3StepPagination("u.uuid");

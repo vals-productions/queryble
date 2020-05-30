@@ -2,6 +2,11 @@
 
 Queryble helps you with SQL (JDBC) or HQL (Hibernate QL) query composition and execution, simplifies and speeds up your development. 
 
+Platform used: Java 11 and Hibernate 5.4. Not a big deal to make it work with Java 8 and Hibernate 4.x if needed.
+
+Start the app, enter http://127.0.0.1:8080/testAll in your browser. You should see "Queryble tests passed"
+page.
+
 If your goal is to provide results to some imaginary paginated UI page that lists users and their addresses:
 
 | User name | Email | Address |

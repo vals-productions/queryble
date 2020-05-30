@@ -27,6 +27,7 @@ public class Queryble<P> {
 	private int paramIndex = 1;	
 	private List<String> sortList = new LinkedList<String>(); 
 	private boolean isFirstWhere = true;
+	private QueryFragment<P> lastFragment;
 
 	protected Function<QueryFragment<P>, Boolean> addDecisionFunction = new Function<>() {
 		@Override
@@ -85,6 +86,7 @@ public class Queryble<P> {
 	
 	public Queryble<P> add(String queryPart) {
 		QueryFragment<P> qf = QueryFragment.build(queryPart);
+		lastFragment = qf;
 		qf.stage = currentStage;
 		queryFragments.add(qf);
 		return this;
@@ -93,6 +95,7 @@ public class Queryble<P> {
 	@SuppressWarnings("unchecked")
 	public Queryble<P> add(String queryPart, Object param) {
 		QueryFragment<P> qf = QueryFragment.build(queryPart, param);
+		lastFragment = qf;
 		if (!isUsePositionalParams) {
 			qf.paramId = (P) getParamName();
 		} else {
@@ -338,5 +341,12 @@ public class Queryble<P> {
 		System.out.println(text);
 	}
 
+    public Queryble<P> withFormat(String format) {
+        QueryFragment<P> qf = lastFragment;
+        if (qf.isParamFragment && qf.param != null) {
+            qf.param = String.format(format, qf.param);
+        }
+        return this;
+    }
 	
 }

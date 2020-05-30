@@ -6,7 +6,7 @@
 	</head>
 <body>
 
-	<h1>view01 page</h1>
+	<h1>Queryble tests passed</h1>
 	
 </body>
 </html>

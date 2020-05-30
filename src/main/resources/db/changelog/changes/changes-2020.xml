@@ -19,14 +19,11 @@
     
     <changeSet author="vlad" id="2020-03-30-init-tbls-02" runAlways="true" runOnChange="true">
     <sql>
-    	SET foreign_key_checks = 0;
     	
     	drop table if exists User;
     	drop table if exists Address;
     	drop table if exists Company;
-    	
-    	SET foreign_key_checks = 1;
-    	
+    	    	
     	CREATE TABLE Company (
     		uuid VARCHAR(36) PRIMARY KEY,
   			name VARCHAR(50)
