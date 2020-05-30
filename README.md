@@ -7,7 +7,9 @@ Platform used: Java 11 and Hibernate 5.4. Not a big deal to make it work with Ja
 Start the app, enter http://127.0.0.1:8080/testAll in your browser. You should see "Queryble tests passed"
 page.
 
-If your goal is to provide results to some imaginary paginated UI page that lists users and their addresses:
+## Potential use case and how Queryble makes it easy
+
+Lets imagine your goal is to provide results to some imaginary paginated UI page that lists users and their addresses:
 
 | User name | Email | Address |
 |---|---|---|
