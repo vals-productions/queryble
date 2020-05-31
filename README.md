@@ -2,10 +2,9 @@
 
 Queryble helps you with SQL (JDBC) or HQL (Hibernate QL) query composition and execution, simplifies and speeds up your development. 
 
-Platform used: Java 11 and Hibernate 5.4. Not a big deal to make it work with Java 8 and Hibernate 4.x if needed.
+Platform used in this project: Java 11 and Hibernate 5.4. Not a big deal to make it work with Java 8 and Hibernate 4.x if needed. HSQL db is used to run tests against in this project.  This is self contained spring boot web application with embeddeded tomcat to startup.
 
-Start the app, enter http://127.0.0.1:8080/testAll in your browser. You should see "Queryble tests passed"
-page.
+Start the app, enter http://127.0.0.1:8080/testAll in your browser. You should see "Queryble tests passed" page. UserDaoImpl.java contains actual DB query samples.
 
 ## Potential use case and how Queryble makes it easy
 
