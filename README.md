@@ -10,6 +10,25 @@ Start the app, enter http://127.0.0.1:8080/testAll in your browser. You should s
 
 Lets imagine your goal is to provide results to some imaginary paginated UI page that lists users and their addresses:
 
+### Tables
+
+| User |  |
+|---|---|
+| id | integer |
+| firstName | text |
+| lastName | text |
+| email | text |
+
+| Address |  |
+|---|---|
+| id |integer  |
+| address | text |
+| city | text |
+| state | text |
+| userId | integer |
+
+### UI Screen
+
 | User name | Email | Address |
 |---|---|---|
 | John Doe | jd@email.com | 123 Main str., Pleasanton, CA |
@@ -17,9 +36,9 @@ Lets imagine your goal is to provide results to some imaginary paginated UI page
 | Ann Lake | al@email.com | 2 Sea View str., San Leandro, CA |
 | Paul Smith | ps@email.com | 7 Mountain str., San Leandro, CA |
 | Jane Lake | ps@email.com | |
-Page 1 of 2
+| | | Page 1 of 2 |
 
-Code below might seem very similar to your usual HQL code to retrieve data from ```User``` and ```Address``` tables where you build query string together with parameters and then just execute it against database. Instead, Queryble collects information about your query and your parameters, then builds several different queries such as count records query, data retrieval query executes them for you.
+Code below might seem very similar to your usual HQL code to retrieve query from ```User``` and ```Address``` tables where you build query string together with parameters and then just execute it against database. Instead, Queryble collects information about your query and parameters, then builds and executes several different queries for you.
 
 ```java
 
@@ -43,18 +62,17 @@ public List<User> findWithQuerybleHql(User searchUser, QuerybleDescriptor queryb
 	List<User> users = q.result();	
 	return users;
 }
+```
 
 Then above below will:
-1. Follow "query by example" pattern and dynamically compose search criteria based on email, first and last name values. If either value is null, the query will not filter on it. This behavior is tunable.
-2. Transform your query into record counting query and report total record count for your actual search criteria. It will not join to address table for record counting since this is faster and will not affect record count results.
+
+1. Follow "query by example" pattern and dynamically compose search criteria based on email, first and last name parameter values. If either value is null, the query will not filter on one. This behavior is tunable.
+2. Transform your query into record counting query and report total record count for your search criteria. It will not join to address table for record counting since this is faster and will not affect record count results.
 3. Solve “HHH000104: firstResult/maxResults specified with collection fetch; applying in memory!” hibernate issue if instructed to do so.
 4. Execute data retrieval query and fetch list of users with their addresse.
 5. Build order by clause.
 
 
-
-
-```
 **Question:** How does it solve “HHH000104: firstResult/maxResults specified with collection fetch; applying in memory!” hibernate issue?
 
 **Background:** Sometime paginated queries involve fetching ManyToOne relationships (User/Address in example above). This does not let Hibernate count records by means of database query only. Hibernte solves this by doing post-processing of the data in your Java application. While this is not a big deal for tables with predictably low number of records, HHH000104 should not be ignored for tableswith unlimited growth. It will lead to java.lang.OutOfMemoryError before you know it. 
